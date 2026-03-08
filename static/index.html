@@ -204,7 +204,7 @@
       <div class="icon icon-up">&#8593;</div>
       <div><div class="card-title">Upload Speed</div></div>
     </div>
-    <p class="card-desc">Sends random data to the server and the server reports how fast it was received.</p>
+    <p class="card-desc">Sends random data to the server. Speed is measured client-side (time from first byte sent to response received).</p>
     <div class="size-row">
       Test size:
       <select id="ul-size">
@@ -385,11 +385,11 @@
       if (!resp.ok) throw new Error('Server error ' + resp.status);
       const data = await resp.json();
       setProgress('ul-bar',100);
+      const clientMbps = ((totalBytes*8)/(clientElapsed*1e6)).toFixed(2);
       setStatus('ul-status','Done');
-      showResult('ul-result','ul-speed', data.speed_mbps+' Mbps','ul-details',
-        `<span class="result-unit">Mbps (server-measured)</span><br>
-         ${data.size_mb} MB received in ${data.time_seconds}s<br>
-         Client-side: ${((totalBytes*8)/(clientElapsed*1e6)).toFixed(2)} Mbps`,
+      showResult('ul-result','ul-speed', clientMbps+' Mbps','ul-details',
+        `<span class="result-unit">Mbps (client-measured)</span><br>
+         ${sizeMb} MB in ${clientElapsed.toFixed(2)}s`,
         'up');
     } catch(e) { setStatus('ul-status','Error: '+e.message,true); }
     finally { setRunning('btn-ul','ul-progress-wrap','ul-bar',false,false); }
