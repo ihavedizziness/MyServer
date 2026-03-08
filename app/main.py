@@ -51,7 +51,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         description=(
-            "## Speed Test Server\n\n"
+            "## Stats Server\n\n"
             "A self-hosted server for measuring network performance:\n\n"
             "- **Download** — how fast clients can pull data from this server\n"
             "- **Upload** — how fast clients can push data to this server\n"
@@ -65,7 +65,7 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
         contact={
-            "name": "Speed Test Server",
+            "name": "Stats Server",
             "url": "https://github.com/ihavedizziness/Server-FastAPI",
         },
         license_info={
