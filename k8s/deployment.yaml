@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stats-server
+  namespace: stats-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stats-server
+  template:
+    metadata:
+      labels:
+        app: stats-server
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: app
+          image: ghcr.io/ihavedizziness/server-fastapi:latest
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

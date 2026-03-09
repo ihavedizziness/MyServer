@@ -64,7 +64,7 @@ jobs:
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ github.sha }}
 
-  # ── Deploy: pull new image and restart container ─────────────────────────
+  # ── Deploy: rolling update via kubectl ──────────────────────────────────
   deploy:
     name: Deploy
     needs: build
@@ -78,16 +78,13 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           port: 2222
-          envs: GHCR_TOKEN,GITHUB_ACTOR
+          envs: IMAGE_TAG
           script: |
             set -e
-            cd ${{ secrets.DEPLOY_PATH }}
-            git pull origin main
-            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f
+            kubectl set image deployment/stats-server \
+              app=ghcr.io/ihavedizziness/server-fastapi:$IMAGE_TAG \
+              -n stats-server
+            kubectl rollout status deployment/stats-server -n stats-server
             echo "Deploy complete"
         env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
+          IMAGE_TAG: ${{ github.sha }}
