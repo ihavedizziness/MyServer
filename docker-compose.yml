@@ -1,0 +1,6 @@
+services:
+  app:
+    image: ghcr.io/ihavedizziness/server-fastapi:latest
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
