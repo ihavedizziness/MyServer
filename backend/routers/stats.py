@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.schemas.stats import ServerStats
-from app.services.stats import get_server_stats
+from backend.schemas.stats import ServerStats
+from backend.services.stats import get_server_stats
 
 router = APIRouter(prefix="/stats", tags=["Stats"])
 

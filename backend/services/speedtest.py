@@ -2,8 +2,8 @@ import asyncio
 
 import speedtest as speedtest_lib
 
-from app.config import Settings
-from app.schemas.speed import InternetSpeedResult, SpeedTestServer
+from backend.config import Settings
+from backend.schemas.speed import InternetSpeedResult, SpeedTestServer
 
 
 async def run_internet_speed_test(settings: Settings) -> InternetSpeedResult:

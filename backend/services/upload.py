@@ -2,7 +2,7 @@ import time
 
 from fastapi import Request
 
-from app.schemas.speed import UploadResult
+from backend.schemas.speed import UploadResult
 
 
 async def measure_upload(request: Request) -> UploadResult:

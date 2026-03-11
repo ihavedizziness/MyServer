@@ -2,7 +2,7 @@ import time
 
 import psutil
 
-from app.schemas.stats import GPUInfo, NetworkIO, ServerStats
+from backend.schemas.stats import GPUInfo, NetworkIO, ServerStats
 
 try:
     import pynvml as _nvml

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 
-from app.config import Settings, get_settings
-from app.services.download import stream_random_bytes
+from backend.config import Settings, get_settings
+from backend.services.download import stream_random_bytes
 
 router = APIRouter(prefix="/download", tags=["Download"])
 

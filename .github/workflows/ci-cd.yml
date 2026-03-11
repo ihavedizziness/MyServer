@@ -32,7 +32,7 @@ jobs:
         run: ruff check .
 
       - name: Type check (mypy)
-        run: mypy app/
+        run: mypy backend/
 
   # ── Build & push Docker image to ghcr.io ────────────────────────────────
   build:

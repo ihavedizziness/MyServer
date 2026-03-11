@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 
-from app.schemas.speed import UploadResult
-from app.services.upload import measure_upload
+from backend.schemas.speed import UploadResult
+from backend.services.upload import measure_upload
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 

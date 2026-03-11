@@ -2,12 +2,12 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.config import get_settings
-from app.routers import download, internet, stats, upload
+from backend.config import get_settings
+from backend.routers import download, internet, stats, upload
 
 BASE_DIR = Path(__file__).parent.parent  # project root
 STATIC_DIR = BASE_DIR / "static"
@@ -90,9 +90,9 @@ def create_app() -> FastAPI:
 
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-    @app.get("/", response_class=HTMLResponse, include_in_schema=False)
+    @app.get("/", response_class=FileResponse, include_in_schema=False)
     async def index() -> str:
-        return (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+        return str(STATIC_DIR / "index.html")
 
     return app
 

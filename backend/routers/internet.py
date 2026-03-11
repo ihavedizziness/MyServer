@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.config import Settings, get_settings
-from app.schemas.speed import InternetSpeedResult
-from app.services.speedtest import run_internet_speed_test
+from backend.config import Settings, get_settings
+from backend.schemas.speed import InternetSpeedResult
+from backend.services.speedtest import run_internet_speed_test
 
 router = APIRouter(prefix="/internet-speed", tags=["Internet Speed"])
 
