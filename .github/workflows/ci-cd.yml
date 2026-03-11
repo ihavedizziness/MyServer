@@ -81,10 +81,10 @@ jobs:
           envs: IMAGE_TAG
           script: |
             set -e
-            sudo kubectl set image deployment/stats-server \
+            kubectl set image deployment/stats-server \
               app=ghcr.io/ihavedizziness/server-fastapi:$IMAGE_TAG \
               -n stats-server
-            sudo kubectl rollout status deployment/stats-server -n stats-server
+            kubectl rollout status deployment/stats-server -n stats-server
             echo "Deploy complete"
         env:
           IMAGE_TAG: ${{ github.sha }}
