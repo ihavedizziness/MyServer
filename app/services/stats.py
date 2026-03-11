@@ -5,33 +5,43 @@ import psutil
 from app.schemas.stats import GPUInfo, NetworkIO, ServerStats
 
 try:
-    import GPUtil as _gputil
+    import pynvml as _nvml
+    _nvml.nvmlInit()
+    _nvml_ok = True
 except Exception:
-    _gputil = None
+    _nvml_ok = False
 
 
 def _get_gpu_info() -> list[GPUInfo]:
-    if _gputil is None:
+    if not _nvml_ok:
         return []
     try:
-        gpus = _gputil.getGPUs()
+        count = _nvml.nvmlDeviceGetCount()
+        result = []
+        for i in range(count):
+            handle = _nvml.nvmlDeviceGetHandleByIndex(i)
+            name = _nvml.nvmlDeviceGetName(handle)
+            util = _nvml.nvmlDeviceGetUtilizationRates(handle)
+            mem = _nvml.nvmlDeviceGetMemoryInfo(handle)
+            try:
+                temp = float(_nvml.nvmlDeviceGetTemperature(handle, _nvml.NVML_TEMPERATURE_GPU))
+            except Exception:
+                temp = 0.0
+            mem_total_mb = round(mem.total / 1024 ** 2, 1)
+            mem_used_mb = round(mem.used / 1024 ** 2, 1)
+            mem_pct = round(mem.used / mem.total * 100, 1) if mem.total else 0.0
+            result.append(GPUInfo(
+                index=i,
+                name=name if isinstance(name, str) else name.decode(),
+                load_percent=float(util.gpu),
+                memory_used_mb=mem_used_mb,
+                memory_total_mb=mem_total_mb,
+                memory_percent=mem_pct,
+                temperature_c=temp,
+            ))
+        return result
     except Exception:
         return []
-    result = []
-    for gpu in gpus:
-        mem_total = gpu.memoryTotal or 0
-        mem_used = gpu.memoryUsed or 0
-        mem_pct = round((mem_used / mem_total * 100), 1) if mem_total else 0.0
-        result.append(GPUInfo(
-            index=gpu.id,
-            name=gpu.name,
-            load_percent=round((gpu.load or 0) * 100, 1),
-            memory_used_mb=round(mem_used, 1),
-            memory_total_mb=round(mem_total, 1),
-            memory_percent=mem_pct,
-            temperature_c=round(gpu.temperature or 0, 1),
-        ))
-    return result
 
 
 def get_server_stats() -> ServerStats:
